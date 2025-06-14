@@ -86,14 +86,14 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
- 
+
 express.raw()
 
 
 const uploadPath = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
 
-app.use('/upload-image', express.raw({ type: ['image/jpeg', 'image/png'], limit: '100kb' }));
+app.use('/upload-image', express.raw({ type: ['image/jpeg', 'image/png', 'image/jpg'] }));
 
 app.post('/upload-image', (req, res) => {
   if (!req.body || !req.body.length) {
