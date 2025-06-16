@@ -4,13 +4,13 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-
+ 
 
 const app = express();
 app.use(cors());
 
 express.raw()
-
+ 
 
 const uploadPath = path.join(__dirname, 'uploads');
 const tempPath = path.join(__dirname, 'temp');
@@ -22,6 +22,8 @@ app.use('/upload-image', express.raw({ type: ['image/jpeg', 'image/png', 'image/
 const imageChunkRoutes = require('./routes/imageChunkRoutes');
 app.use('/', imageChunkRoutes);
 
+const singleChunkImageRoutes = require('./routes/singleChunkImageRoutes');
+app.use('/', singleChunkImageRoutes);
 
 
 app.post('/upload-image', (req, res) => {

@@ -14,31 +14,31 @@ exports.uploadImageChunk = async (req, res) => {
     return res.status(400).json({ error: 'Missing headers or image data' });
   }
 
-  // Save current image chunk as temp file
+ 
   const tempFile = path.join(tempPath, `img_${imageIndex}.jpg`);
   fs.writeFileSync(tempFile, req.body);
 
-  // If NOT last chunk, respond with index only
+ 
   if (imageIndex < totalImages) {
     return res.json({ message: 'Chunk received', index: imageIndex });
   }
 
-  // If last chunk, combine all and respond with URL
+ 
   try {
-    // Read all image buffers in order
+ 
     const images = [];
     for (let i = 1; i <= totalImages; i++) {
       images.push({ input: fs.readFileSync(path.join(tempPath, `img_${i}.jpg`)) });
     }
 
-    // Combine images vertically (simple example)
+    
     let combined = sharp(images[0].input);
     for (let i = 1; i < images.length; i++) {
       const nextImg = sharp(images[i].input);
       const { width, height } = await combined.metadata();
       const nextMeta = await nextImg.metadata();
 
-      // Create new image with total height
+ 
       const newHeight = height + nextMeta.height;
       const newImg = await sharp({
         create: {
@@ -62,7 +62,7 @@ exports.uploadImageChunk = async (req, res) => {
     const finalFilePath = path.join(uploadPath, finalFilename);
     fs.writeFileSync(finalFilePath, finalImage);
 
-    // Clean up temp files
+ 
     for (let i = 1; i <= totalImages; i++) {
       fs.unlinkSync(path.join(tempPath, `img_${i}.jpg`));
     }
